@@ -71,11 +71,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeftDrive = null;
-    private DcMotor backLeftDrive = null;
-    private DcMotor frontRightDrive = null;
-    private DcMotor backRightDrive = null;
-    private DcMotor extra = null;
+    private DcMotorEx frontLeftDrive = null;
+    private DcMotorEx backLeftDrive = null;
+    private DcMotorEx frontRightDrive = null;
+    private DcMotorEx backRightDrive = null;
+    private DcMotorEx extra = null;
 
 
     for (int i = 0; i < 100; i++)
@@ -89,11 +89,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        extra = hardwareMap.get(DcMotor.class, "extra");
+        frontLeftDrive = hardwareMap.get(DcMotorEx.class, "front_left_drive");
+        backLeftDrive = hardwareMap.get(DcMotorEx.class, "back_left_drive");
+        frontRightDrive = hardwareMap.get(DcMotorEx.class, "front_right_drive");
+        backRightDrive = hardwareMap.get(DcMotorEx.class, "back_right_drive");
+        extra = hardwareMap.get(DcMotorEx.class, "extra");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -109,7 +109,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        extra.setDirection(Dc.Motor.Direction.REVERSE);
+        extra.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -133,7 +133,13 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double frontRightPower = axial - lateral - yaw;
             double backLeftPower   = axial - lateral + yaw;
             double backRightPower  = axial + lateral - yaw;
-            double extraplus = axial - lateral - yaw;
+            double extraplus       = axial - lateral - yaw;
+
+            double frontLeftSpeed  = getSpeed(frontLeftDrive);
+            double frontRightSpeed = getSpeed(frontRightDrive);
+            double backLeftPower   = getSpeed(backLeftDrive);
+            double backRightPower  = getSpeed(backRightDrive);
+            double extraminus      = getSpeed(extra);
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -148,6 +154,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 backRightPower  /= max;
                 extraplus       /= max - 0.33;
             }
+
+            if 
 
             // This is test code:
             //
@@ -167,11 +175,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             */
 
             // Send calculated power to wheels
-            frontLeftDrive.setPower(frontLeftPower);
-            frontRightDrive.setPower(frontRightPower);
-            backLeftDrive.setPower(backLeftPower);
-            backRightDrive.setPower(backRightPower);
-            extra.setPower(extraplus);
+            frontLeftDrive.setVelocity(frontLeftSpeed * frontLeftPower);
+            frontRightDrive.setVelocity(frontRightSpeed * frontRightPower);
+            backLeftDrive.setVelocity(backLeftSpeed * backLeftPower);
+            backRightDrive.setVelocity(backRightSpeed * backRightPower);
+            extra.setVelocity(extraminus * extraplus);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
