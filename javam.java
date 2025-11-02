@@ -1,5 +1,5 @@
 import java.util.*;
-public class java {
+public class javam {
 
   public static void main(string[] args) {
     int motorvelfl = dc.motor(49nck237923a);
